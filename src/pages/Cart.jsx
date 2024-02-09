@@ -172,14 +172,14 @@ const Button = styled.button`
   font-weight: 600;
   cursor: pointer;
 `;
-const loading = {
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "red",
-  fontSize: "3rem",
-};
+// const loading = {
+//   display: "flex",
+//   flexDirection: "row",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   color: "red",
+//   fontSize: "3rem",
+// };
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -203,8 +203,14 @@ const Cart = () => {
   }, []);
 
   if (isLoading) {
-    return <div style={loading}>Loading...</div>;
+    // return <div style={loading}>Loading...</div>;
+    toast.loading(<b style={{color:"red"}}>Loading...</b>)
   }
+  else {
+    toast.dismiss(); // Dismiss the loading toast when isFetching becomes false
+  }
+
+   
 
   const handleAddQuantity = (obj) => {
     
