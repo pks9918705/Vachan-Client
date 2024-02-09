@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import Success from "./pages/Success.jsx";
 import SuccessPayment from "./pages/SuccessPay.jsx";
 import FailurePayment from "./pages/FailurePayment.jsx";
-import FrontPage from "./FrontPage"
+// import FrontPage from "./FrontPage"
 
     function App() {
         const user = useSelector((state) => state.user.currentUser);

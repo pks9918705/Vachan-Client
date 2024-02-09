@@ -209,7 +209,7 @@ const Cart = () => {
   const handleAddQuantity = (obj) => {
     
     dispatch(addProduct(obj));
-    toast.success('Product added successfully')
+    // toast.success('Product added successfully')
   };
 
   const handleCompleteRemove = (p) => {
