@@ -1,0 +1,190 @@
+--------------------
+ABOUT- Redux Persist
+--------------------
+Redux Persist ek Redux middleware hai jo state ko persist karna (store karna) ka kaam karta hai. Jab aap Redux ka use karte hain, aapke application ka state store mein rehta hai. Lekin, jab aap refresh karte hain ya application ko close karke dubara open karte hain, Redux store ka state reset ho jata hai.
+
+Redux Persist is problem ko solve karne ke liye hai. Iska basic kaam hai Redux store ka state ko local storage ya kisi dusre storage engine mein store karke rakhna, jisse ki jab aap dubara se application ko open karte hain, toh vo stored state ko retrieve karke use kare. Isse aapke application ka state persist rehta hai refresh ya reopen ke baad bhi.
+
+Kuch reasons hain jinhein log Redux Persist ka istemal karte hain:
+
+1. **User Experience Improvement:** Jab user apne application ko refresh karta hai ya reopen karta hai, toh Redux Persist se state restore ho jata hai, aur user ko apne last state se shuruwat karne ki facility milti hai.
+
+2. **Data Retention:** Agar aapke application mein kuch critical data hai jo user ne input kiya hai, aur aap chahte hain ki vo data refresh ya application close hone ke baad bhi available rahe, to Redux Persist ka istemal kiya ja sakta hai.
+
+3. **Application State Management:** Redux Persist ek powerful tool hai jo aapko application state management mein madad karta hai. Isse aap easily state ko save aur restore kar sakte hain.
+
+Redux Persist ka istemal karna ek best practice hai, especially jab aapko user experience ko improve karna hai aur aap chahte hain ki users ko seamless experience mile jab vo apne application ko use karte hain.
+
+
+
+----------------------------------------------------
+                    store.js ka concrpt 
+----------------------------------------------------
+
+Is code mein Redux Toolkit aur Redux Persist ka istemal kiya gaya hai. Niche main aapko code ka explanation dunga:
+
+1. **Import Statements:**
+   - `configureStore` aur `combineReducers` Redux Toolkit se import kiye gaye hain.
+   - `persistStore`, `persistReducer`, `FLUSH`, `REHYDRATE`, `PAUSE`, `PERSIST`, `PURGE`, `REGISTER` Redux Persist se import kiye gaye hain.
+   - `storage` Redux Persist ke liye storage engine ko import karta hai.
+   - `cartReducer` aur `userReducer` alag-alag reducers ko import karte hain jo `cart` aur `user` slices ke liye responsible hain.
+
+2. **Persist Configuration:**
+   - `persistConfig` mein Redux Persist ke liye basic configuration di gayi hai.
+   - `key` property "root" set karta hai, jo store mein state ko identify karega.
+   - `storage` property mein Redux Persist ke liye kaunsa storage engine use karna hai woh set kiya gaya hai (yahaan `storage` import kiya gaya default storage engine hai).
+
+3. **Root Reducer:**
+   - `rootReducer` mein `combineReducers` se `userReducer` aur `cartReducer` ko combine kiya gaya hai. Yeh dono reducers alag slices (parts) ke liye responsible hain.
+
+4. **Persisted Reducer:**
+   - `persistedReducer` mein `persistReducer` ka use kiya gaya hai. Yeh `persistConfig` ke saath `rootReducer` ko wrap karta hai, jisse Redux Persist state ko persist kar sake.
+
+5. **Configure Store:**
+   - `store` constant mein `configureStore` ka use kiya gaya hai.
+   - `reducer` property mein `persistedReducer` diya gaya hai, jo Redux Persist ke saath wrap kiya gaya hai.
+   - `middleware` property mein `getDefaultMiddleware` ka use kiya gaya hai, jisme `serializableCheck` property set ki gayi hai.
+   - `serializableCheck` se kuch actions ko ignore kiya gaya hai, jaise ki `FLUSH`, `REHYDRATE`, `PAUSE`, `PERSIST`, `PURGE`, `REGISTER`.
+
+6. **Persistor:**
+   - `persistor` constant mein `persistStore` se ek persistor object create kiya gaya hai, jisse state persist ho sake.
+
+Is code ka istemal Redux Toolkit aur Redux Persist ke saath ek Redux store ko configure karne ke liye kiya gaya hai. Isse application state persist hota hai, aur users ko seamless experience milta hai jab vo apne application ko refresh ya close-khol karte hain.
+
+
+------------------
+more explanation
+------------------
+
+Bilkul, main achhe se detail mein explain karta hoon.
+
+**1. Import Statements:**
+```javascript
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import cartReducer from "./cartRedux";
+import userReducer from "./userRedux";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+```
+Yahan, sabse pehle Redux Toolkit aur Redux Persist ke liye zaruri modules ko import kiya gaya hai. `configureStore` Redux Toolkit se aata hai, jo ek store banane ke liye use hota hai. `combineReducers` se multiple reducers ko combine kiya ja sakta hai. `persistStore`, `persistReducer` aur related constants Redux Persist ke liye import kiye gaye hain. `storage` Redux Persist ke liye storage engine ko represent karta hai.
+
+**2. Persist Configuration:**
+```javascript
+const persistConfig = {
+  key: "root",
+  version: 1,
+  storage,
+};
+```
+`persistConfig` mein Redux Persist ke liye basic configuration di gayi hai:
+- `key`: State ko identify karne ke liye ek unique key ("root" yahan) diya jata hai.
+- `version`: Version number, agar aap state structure mein kuch change karte hain toh.
+- `storage`: Redux Persist ke liye kaunsa storage engine use karna hai woh specify kiya gaya hai (`storage` variable se).
+
+**3. Root Reducer:**
+```javascript
+const rootReducer = combineReducers({ user: userReducer, cart: cartReducer });
+```
+`rootReducer` mein `combineReducers` se `userReducer` aur `cartReducer` ko combine kiya gaya hai. Yeh dono reducers alag slices (parts) ke liye responsible hain. `user` slice aur `cart` slice ke saath.
+
+**4. Persisted Reducer:**
+```javascript
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+```
+`persistReducer` ka use `persistConfig` ke saath `rootReducer` ko wrap karne ke liye kiya gaya hai. Yeh Redux Persist ko enable karta hai, jisse state ko persist kiya ja sake.
+
+**5. Configure Store:**
+```javascript
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+```
+`configureStore` se ek Redux store banaya gaya hai. `reducer` property mein `persistedReducer` diya gaya hai, jo Redux Persist ke saath wrap kiya gaya hai. `middleware` property mein `getDefaultMiddleware` ka use kiya gaya hai, jisme `serializableCheck` property set ki gayi hai. `serializableCheck` se kuch actions ko ignore kiya gaya hai, jaise ki `FLUSH`, `REHYDRATE`, `PAUSE`, `PERSIST`, `PURGE`, `REGISTER`.
+
+**6. Persistor:**
+```javascript
+export let persistor = persistStore(store);
+```
+`persistStore` se ek `persistor` object create kiya gaya hai. `persistor` Redux store ke saath associate hota hai aur state ko persist karta hai.
+
+Toh, is code ka main goal hai Redux store ko configure karna, usme Redux Persist ko integrate karna, taki state persist ho sake aur users ko seamless experience mile jab vo apne application ko refresh ya close-khol karte hain.
+
+
+--------------------------------
+serializableCheck
+--------------------------------
+"SerializableCheck" ka matlab hai ki yeh ek option hai jo aapko define karta hai ki aap kaise actions ko handle karna chahte hain jo serialize nahi ho sakte hain ya jinhe store karte waqt warn ya error aata hai.
+
+Redux apne actions ko serialize karta hai, yaani ki unhe ek serial format mein convert karta hai taki unhe store mein rakhna asaan ho aur unhe dev tools mein bhi dekha ja sake. Lekin kuch actions aise hote hain jo serialize nahi ho sakte, jaise ki functions ya circular references.
+
+Jab aap Redux DevTools ya Redux Persist ka istemal karte hain, toh aise actions ko handle karna important hota hai. Isme "serializableCheck" aapko allow karta hai specific actions ko ignore karna ya handle karna.
+
+Upar diye gaye code mein, `serializableCheck` option ka use kiya gaya hai aur `ignoredActions` mein kuch specific actions ko ignore kiya gaya hai. Yeh actions, jaise ki `FLUSH`, `REHYDRATE`, `PAUSE`, `PERSIST`, `PURGE`, `REGISTER`, Redux Persist ke internal use ke liye hote hain, aur inhe serialize nahi kiya jata. Is liye, inhe ignore karna ek acchi practice hai taki unnecessary warnings ya errors na aaye.
+
+
+----------------------------->
+----------------------------->
+----------------------------->
+BELOW CODE EXPLAINATION:
+----------------------------->
+Certainly! Let's break down the code step by step:
+
+```javascript
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+```
+
+1. **`configureStore` function:**
+   - `configureStore` is a function provided by Redux Toolkit to create a Redux store.
+   - It takes an object as an argument, where you can configure various aspects of the store.
+
+2. **`reducer` property:**
+   - The `reducer` property specifies the root reducer for the store.
+   - In this case, `persistedReducer` is used as the root reducer.
+   - `persistedReducer` is the rootReducer wrapped with `persistReducer` from Redux Persist. This ensures that the state is persisted.
+
+3. **`middleware` property:**
+   - The `middleware` property allows you to customize the middleware that is applied to the store.
+   - In this code, a function is provided to `middleware` that takes `getDefaultMiddleware` as an argument.
+   - `getDefaultMiddleware` is a function provided by Redux Toolkit that returns an array of default middleware.
+
+4. **Customizing Middleware:**
+   - The function provided to `middleware` is used to customize the default middleware.
+   - `serializableCheck` is an option that allows you to define how to handle actions that are not serializable.
+   - `ignoredActions` is an array of actions that should be ignored by the serializable check.
+
+5. **Serializable Check:**
+   - The `serializableCheck` is useful to avoid errors related to non-serializable actions when using tools like Redux DevTools or Redux Persist.
+   - Actions like `FLUSH`, `REHYDRATE`, `PAUSE`, `PERSIST`, `PURGE`, `REGISTER` are intentionally ignored by the serializable check because they are internal actions used by Redux Persist and shouldn't be serialized.
+
+6. **Final Store Object:**
+   - The entire configuration object is used to create the Redux store using `configureStore`.
+   - The resulting store is assigned to the constant `store`.
+   - This `store` object can now be used in the application to dispatch actions, subscribe to changes, etc.
+
+In summary, this code sets up a Redux store using Redux Toolkit's `configureStore`. It includes a custom middleware configuration that handles the serialization of actions, with specific actions being ignored to prevent unnecessary warnings or errors. The use of `persistedReducer` ensures that the state is persisted using Redux Persist.
+
+------------------------------
+------------------------------
