@@ -1,12 +1,11 @@
- 
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { login } from "../redux/apiCalls";
 import { mobile } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+// import { resetIsFetching } from "../redux/userRedux";
 
 const Container = styled.div`
   width: 100vw;
@@ -72,25 +71,44 @@ const Error = styled.span`
   color: red;
 `;
 
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
+   
+
+  // useEffect(() => {
+  //   // Reset isFetching state when component mounts or refreshes
+    
+  //   return () => {
+  //     dispatch(resetIsFetching());
+  //     console.log("Cleaning up before page refresh...");
+  //   };
+  // }, []);
 
   const handleClick = (e) => {
     e.preventDefault();
     // toast.loading(<b>Loging ...</b>)
     login(dispatch, { username, password });
   };
-  const handleClickRegister=()=>{
-    navigate('/register')
+  const handleClickRegister = () => {
+    navigate("/register");
+  };
+
+  if (isFetching) {
+    console.log(isFetching);
+    toast.loading(<b>Loading ...</b>);
+  } else {
+    toast.dismiss(); // Dismiss the loading toast when isFetching becomes false
   }
+   
   return (
     <Container>
       <Wrapper>
+        <Toaster />
         <Title>SIGN IN</Title>
         <Form>
           <Input
@@ -105,7 +123,7 @@ const Login = () => {
           <Button onClick={handleClick} disabled={isFetching}>
             LOGIN
           </Button>
-          {error && <Error>Something went wrong...</Error>}
+          {error && <Error>Loging Failed..</Error>}
           <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
           <Link onClick={handleClickRegister}>CREATE A NEW ACCOUNT</Link>
         </Form>
