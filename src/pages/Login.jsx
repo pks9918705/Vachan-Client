@@ -5,7 +5,7 @@ import { mobile } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-// import { resetIsFetching } from "../redux/userRedux";
+ 
 
 const Container = styled.div`
   width: 100vw;
@@ -77,21 +77,10 @@ const Login = () => {
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
-   
-
-  // useEffect(() => {
-  //   // Reset isFetching state when component mounts or refreshes
-    
-  //   return () => {
-  //     dispatch(resetIsFetching());
-  //     console.log("Cleaning up before page refresh...");
-  //   };
-  // }, []);
-
+ 
   const handleClick = (e) => {
     e.preventDefault();
-    // toast.loading(<b>Loging ...</b>)
+     
     login(dispatch, { username, password });
   };
   const handleClickRegister = () => {

@@ -27,7 +27,7 @@ const Products = ({ cat, filters, sort }) => {
         ? `https://vachan-server.onrender.com/api/products?category=${cat}`
         : "https://vachan-server.onrender.com/api/products"
     );
-   console.log(res);
+   console.log("prdts",res);
     return res.data;
   }
  
@@ -64,7 +64,7 @@ const Products = ({ cat, filters, sort }) => {
       ) : isError ? (
         <LoadingMessage>Error fetching data</LoadingMessage>
       ) : (
-        data.map((item, i) => (
+        data?.map((item, i) => (
           <CardHomeScreen item={item} key={i} />
         ))
       )}
