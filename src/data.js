@@ -2,12 +2,16 @@
 export const categories = [
     {
        
-      cat:"Chineese"
+      cat:"Noodles/Pasta"
 
     },
     {
        
-      cat:"Drinks"
+      cat:"Drink/Beverages"
+    },
+    {
+       
+      cat:"Italian"
     },
     {
        
@@ -15,48 +19,23 @@ export const categories = [
     },
     {
        
-      cat:"South Indian"
-    },
-    {
-       
-      cat:"Chineese"
+      cat:"Snacks"
 
     },
     {
        
-      cat:"Chineese"
+      cat:"North Indian"
 
     },
     {
        
-      cat:"Drinks"
+      cat:"Diary Products"
     },
+     
     {
        
-      cat:"South Indian"
-    },
-    {
-       
-      cat:"Chineese"
+      cat:"Cakes/Rolls"
 
-    },
-    {
-       
-      cat:"Drinks"
-    },
-    {
-       
-      cat:"South Indian"
-    },
-    
-    {
-       
-      cat:"South Indian"
-    },
-    {
-       
-      cat:"Chineese"
-
-    },
-  ];
+    } 
+  ]
  
