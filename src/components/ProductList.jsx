@@ -85,7 +85,7 @@ const ProductList = ({cat}) => {
         </Filter>
       </FilterContainer> */}
       {/* // passing to the products components  */}
-      <Products cat={cat.toLowerCase()} filters={filters} sort={sort} />
+      <Products cat={cat} filters={filters} sort={sort} />
        
     </Container>
   );
