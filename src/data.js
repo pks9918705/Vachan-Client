@@ -2,39 +2,39 @@
 export const categories = [
     {
        
-      cat:"Noodles/Pasta"
+      cat:"noodles/pasta"
 
     },
     {
        
-      cat:"Drink/Beverages"
+      cat:"drink/beverages"
     },
     {
        
-      cat:"Italian"
+      cat:"italian"
     },
     {
        
-      cat:"South Indian"
+      cat:"south indian"
     },
     {
        
-      cat:"Snacks"
+      cat:"snacks"
 
     },
     {
        
-      cat:"North Indian"
+      cat:"north indian"
 
     },
     {
        
-      cat:"Diary Products"
+      cat:"diary products"
     },
      
     {
        
-      cat:"Cakes/Rolls"
+      cat:"cakes/rolls"
 
     } 
   ]
